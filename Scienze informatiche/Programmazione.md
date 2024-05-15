@@ -350,3 +350,38 @@ Permette anche di
 - cancellare eseguibili
 - esegui test
 - Installare software
+
+Programmazione strutturata: limiti sui salti, iterazione invece di ricorsione
+
+##### Particolarità C
+Variabili Statiche la sua inizializzazione viene eseguita una sola volta e salva il valore a lui associato.
+
+Heap per gestione dinamica della memoria
+``` C
+int *p=(int *)malloc(sizeof(int)*20)
+free(p); // dealloca p
+```
+Concettualmente è analogo a `int p[20]` ma il compilatore non riesce a conoscere l’estensione della variabile e fare le stesse operazioni che farebbe con la seconda definizione
+
+#### Numeri casuali
+Non esiste un vero random in programmazione. Si una funzione di generazione “casuale” dipendente da seed
+
+#### Funzione passato come parametro
+$\begin{array}{rcl}\text{Umano}&-&\text{Problema}\\\backslash& &/ \\&\text{Macchina}\end{array}$
+
+Nella programmazione classica:
+$$Programma(Dato)\rightarrow Dato$$
+Nella programmazione di ordine superiore questa distinzione viene eliminata. $$Programma\cong Dato$$La macchina di Turing introduce Universalità ovvero la capacità del calcolatore di simulare nuove istruzioni grazie a queste salvate come dati.
+
+``` C
+int minimo(int *X, int size);
+int massimo(int *X, int size);
+void selectionSortGeneral(int *X, int size, int (*selezione_elem)(int *A, int size));
+
+int main() {
+	int n = 10;
+	int A[n] = {10,9,8,7,6,5,4,3,2,1};
+	selectionSortGeneral(A[], n, minimo());
+}
+```
+

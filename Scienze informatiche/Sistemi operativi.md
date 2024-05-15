@@ -252,7 +252,6 @@ Con pre-rilascio
  - - - - - - - -[D D D]
  - - - - - - - - - - - e e e e e e e e e[E E E E E]
 ```
-
 ## Gestione memoria
 I processi possono essere
 1. allocati in modo fisso (MONOPROGRAMMATI)
@@ -283,8 +282,132 @@ Per raffigurare la disposizione in memoria
 - Lista concatenata `[|bit inizio|lunghezza|punta lista successiva]`
 
 Strategie allocazione con liste:
-- First Fit, alla prima disponibilità
-- Next Fit, alla prossima disponibilità
-- Best Fit, nella disponibilità più adeguata
-- Worst Fit, nella disponibilità più grande
-- Quick Fit, liste diverse di ricerca per ampiezze ‘tipiche’
+- _First Fit_, alla prima disponibilità
+- _Next Fit_, alla prossima disponibilità
+- _Best Fit_, nella disponibilità più adeguata
+- _Worst Fit_, nella disponibilità più grande
+- _Quick Fit_, liste diverse di ricerca per ampiezze ‘tipiche’
+
+#### Memoria Virtuale
+RAM insufficiente, processo caricato parzialmente con indirizzi relativi.
+**MMU** li interpreta e mappa agli indirizzi fisici
+Tutto trasparente alla CPU e programmatore
+
+Tecniche
+- Paginazione
+	Memoria virtuale suddivisa in pagine
+	RAM suddivisa in frame, grande quanto pagine
+- Segmentazione
+
+Thrashing, non c’è spazio per i processi necessari.
+##### Paginazione
+Politiche rimpiazzo
+- **NRU** (Not Recently Used)
+	Bit M (modified), R (referenced)
+	- classe 0, non riferita e non modificata
+	- classe 1, non riferita e modificata
+	- classe 2, riferita e non modificata
+	- classe 3, riferita e modificata
+- **FIFO** (First In First Out)
+	**Second Chance**, rimpiazza solo le pagine con R=0
+- **Orologio**, lista circolare
+- **LRU** (Least Recently Used)
+	Ha bisogno di hardware dedicato
+- **NFU** (Not Frequently Used)
+	Contatore per l’uso della pagina, non viene mai resettato!
+	**Aging**, NFU che resetta dopo N aggiornamenti
+
+Nessuna delle politiche precedenti tengono conto 
+> **Working Set** (WS), insieme di pagine che un processo usa in un dato istante.
+- **WS approssimato**, simile a Aging
+	Ogni page frame 
+- **WS con orologio**
+
+**_Anomalia di Belady_**, la possibilità per cui all’aumentare della RAM, aumentino anche i _page fault_.
+Gli algoritmi immuni a questa anomalia (**stack algorithms**), soddisfano$$M(m,r)\supseteq M(m+1,r)$$dove m sono il numero di page frame e r i riferimenti.
+
+Dobbiamo scegliere tra
+- Politiche **Locali**
+	Rimpiazzo del WS che ha 
+- Politiche **Globali**
+
+Come scegliere la dimensione della pagina?
+**Calcolo dello spreco**$$f(\pi)=(\sigma/\pi)\cdot\epsilon+\pi/2$$$\sigma$ dimensione media di un processo
+$\pi$ dimensione media di una pagina
+$\epsilon$ grandezza di una riga in tabella delle pagine
+
+Area SWAP
+- Area per pagine temporaneamente rimpiazzate
+- Usato per ibernazione
+
+##### Segmentazione
+Il programmatore deve esserne consapevole
+Spesso i segmenti sono paginati.
+
+Porta a problemi di.segmentazione esterna. Si deve ricompattatare.
+
+## File System
+Per accomodare
+- Persistenza dei dati
+- Condivisione dati
+- Grandezza variabile dati
+nella memoria secondaria.
+
+Il _file_ è un concetto astratto di dato per la quale è utilizzabile indipendentemente dalla conoscenza della sua struttura.
+
+File regolari
+File catalogo (directory), descrive l’organizzazione dei file in cartelle
+File speciali, indica i dispositivi I/O, usato in UNIX e GNU/Linux
+
+Strutture di Directory
+**a un livello**
+Ogni file è elencato in una unica lista lineare.
+
+**a due livelli**
+
+ **ad albero**
+ 
+ **a grafo**
+ Il file può appartenere a più directory grazie all’uso di _collegamenti_
+
+#### Realizzazione FS
+L’unità su disco è un settore ma, vengono letti come blocchi.
+C’è frammentazione.
+
+Ogni partizione può avere un FS distinto ed è preceduto da una tabella descrittiva che specifica
+- blocco boot
+- superblocco
+- lista liberi
+- nodi indice
+- root
+- tutti gli altri file…
+
+Un file è un insieme di blocchi su disco, possono allocati
+- **Allocazione contigua**
+	File memorizzati su blocchi consecutivi.
+	Identificato dall’indirizzo del suo primo blocco e numero blocchi.
+	Accesso sequenziale o diretto, letto in un solo accesso.
+	Contro: ogni modifica ha rischio di frammentazione esterna.
+- **Allocazione a lista concatenata**
+	File in blocchi contenente puntatore al loro prossimo blocco File.
+	Identificato dall’indirizzo al suo primo blocco (o ultimo).
+	Accesso sequenziale ma, molti salti.
+	Contro: un blocco corrotto, corrompe tutto il file.
+- **Allocazione a lista indicizzata**
+	File descritto dall’insieme dei puntatori ai suoi blocchi.
+	Puntatori ai blocchi in struttura apposita.
+	2 organizzazioni:
+	- tabulazione **FAT** (File Allocation Table)
+	- Indicizzata (**i-node**)
+	Accesso sequenziale e diretto.
+_FAT_
+
+
+_i-node_
+Usato da UNIX e GNU/Linux.
+
+Gestione blocchi liberi
+- bitmap, vettore di bit 0 (libero) o 1 (occupato) che indica lo stato dei blocchi a loro corrispondenti
+- lista concatenata di blocchi liberi
+
+Directory ha nome, collocazione e attributi.
