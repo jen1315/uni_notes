@@ -385,3 +385,93 @@ int main() {
 }
 ```
 
+Standard input, flusso input (tastiera, mouse etc)
+Standard output, flusso output (a schermo, in file)
+Standard error, flusso errore
+
+Classificazione file
+- accesso sequenziale
+- accesso diretto
+- file di testo, caratteri organizzare in righe
+- file binario
+
+``` c
+FILE *fp;
+fp = fopen("file.txt", "r");
+if(f_in==NULL) {
+	fprintf(stderr, "Il file non può essere aperto.\n");
+	return EXIT_FAILURE;
+}else {
+	…
+	fclose(f_in);
+}
+```
+
+Queste operazioni avvengono al buffer di output che viene salvato su file a chiusura.
+
+Con i file binari, se si è a conoscenza della lunghezza di record, si può accedere casualmente (a un record specifico).
+``` c
+struct record r;
+fread(r, <dim_record>, <num_record>, fp);
+fwrite(r, sizeof(struct record), 2, fp);
+```
+Ci possono essere problemi di portabilità causati dalla differenza di memorizzazione. 
+`fseek(fp, <offset>, <origine>)` spostare il puntatore
+
+Allocazione memoria
+- statica (avviene all’avvio programma)
+- automatica (avviene a run-time)
+- dinamica (allocata specificamente dal programmatore)
+
+##### Lista concatenata
+- successione di elementi
+- relazione di ordine tra gli elementi
+
+Operazioni Specifiche
+- inserimento e cancellazione
+- visita / ricerca
+- inizializzazione
+
+``` c
+struct nodo {
+	int dato;
+	struct nodo *next;
+}; typedef struct nodo Node;
+
+void init();
+void insertTop(Node **list, int val);
+void insertLast(Node **list, int val);
+Node removeTop(Node **list);
+Node removeTop(Node **list);
+void printList(Node *list);
+
+int main() {
+	Node *LinkedList = init();
+	
+	malloc(sizeof(Node));
+}
+```
+
+**Pila (stack)**, LIFO
+**Coda (queue)**, FIFO
+
+##### Albero
+Nodo iniziale dalla quale si collegano figli che a sua volta ha figli così ricorsivamente.
+
+**Albero binario di ricerca**: il massimo dei figli è 2 ed è ordinato in modo tale che a sinistra ha valori minori e destra maggiori.
+
+Definire se l’albero segue
+- visita _simmetrica_, inizia dal nodo sinistro, poi parente e nodo destro
+- visita anticipata, inizia dalla radice e poi visita il sotto-albero sinistro e poi quello destro
+- visita posticipata/in profondità, dalle foglie senza figli da sinistra poi in salita fino alla radice
+``` c
+struct bleaf {
+	int dato;
+	struct nodo *left;
+	struct nodo *right;
+}; typedef struct bleaf bTree;
+
+```
+Cancellazione di un nodo parente
+- figlio destro prende il suo posto
+- occorre riordinare il sotto albero suo figlio
