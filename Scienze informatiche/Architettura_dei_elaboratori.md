@@ -1,20 +1,40 @@
 Computer Organisation And Architecture, 10th ed.
 
+- [[#1. Concetti base|1. Concetti base]]
+- [[#2. Notazioni in diverse basi|2. Notazioni in diverse basi]]
+- [[#3. Componenti e connessioni|3. Componenti e connessioni]]
+	- [[#3. Componenti e connessioni#3.1 Architettura Von Neumann|3.1 Architettura Von Neumann]]
+	- [[#3. Componenti e connessioni#3.2 Ciclo FETCH, DECODE, EXECUTE|3.2 Ciclo FETCH, DECODE, EXECUTE]]
+	- [[#3. Componenti e connessioni#3.3 Connessioni BUS|3.3 Connessioni BUS]]
+	- [[#3. Componenti e connessioni#3.4 POINT-TO-POINT interconnect|3.4 POINT-TO-POINT interconnect]]
+- [[#4. Memoria|4. Memoria]]
+	- [[#5. Memorie interne|5. Memorie interne]]
+	- [[#5. Memorie interne#6. Memoria Esterna|6. Memoria Esterna]]
+- [[#7. Input e Output|7. Input e Output]]
+- [[#8. Aritmetica dei calcolatori|8. Aritmetica dei calcolatori]]
+		- [[#Numeri naturali con segno|Numeri naturali con segno]]
+		- [[#Numero reali|Numero reali]]
+	- [[#8. Aritmetica dei calcolatori#Linguaggio macchina|Linguaggio macchina]]
+		- [[#Dati x86|Dati x86]]
+	- [[#8. Aritmetica dei calcolatori#Pipeline|Pipeline]]
+	- [[#8. Aritmetica dei calcolatori#Filosofia RISC|Filosofia RISC]]
+		- [[#MIPS (32bit)|MIPS (32bit)]]
+	- [[#8. Aritmetica dei calcolatori#Multicore|Multicore]]
 
 ## 1. Concetti base
 
-- **Architettura**: caratteristiche visibili al programmatore (Instruction Set Architecture)
-- **Organizzazione**: unità operative e loro connessioni
+- **Architettura**: caratteristiche visibili al programmatore (Instruction Set Architecture), tecniche di indirizzamento della memoria
+- **Organizzazione**: unità operative e loro connessioni hardware, serve per implementare l'architettura
 
-Programmi scritti per una specifica architettura funziona in tutte le organizzazioni che usano l’architettura
+Programmi scritti per una specifica architettura funziona in tutte le organizzazioni che usano l’architettura.
 
 **Struttura**: il modo in cui i componenti si relazionano
 **Funzione**: le operazioni che dei individuali componenti
 
-SI segue una struttura **TOP-DOWN** 
+Si segue una struttura **TOP-DOWN** 
 ovvero, partendo dalle istruzioni, determiniamo i componenti maggiori e la loro struttura e funzione per poi costruire i componenti ai più bassi livelli.
 
-Funzioni base calcolatore
+Struttura calcolatore
 - Elaborazione dati (CPU)
 - Memorizzazione dati
 - Trasmissione dati
@@ -55,19 +75,19 @@ Algebra di Boole
 | 0   | 1   | 0           | 1          | 1               |
 | 1   | 0   | 0           | 1          | 1               |
 | 1   | 1   | 1           | 1          | 0               |
-NAND = NOT(A*B) = ($\bar{A*B}$)$\quad$NOR = NOT(OR) = ($\bar{A+B}$)
+NAND = NOT(A\*B) = ($\bar{A*B}$)$\quad$NOR = NOT(OR) = ($\bar{A+B}$)
 
 ## 3. Componenti e connessioni
+
+Calcolatore non generico
+- Esegue un programma prestabilito nella sua costruzione
+- Si chiama programma “cablato”, ed era il solo sistema esistente pre-Von Neumann
 ### 3.1 Architettura Von Neumann
 
 Esecutore generico
 - Dati e istruzioni in memoria accessibile sia in lettura che scrittura
 - Memoria accessibile per indirizzo
 - Esecuzione sequenziale delle istruzioni
-
-Calcolatore non generico
-- Esegue un programma prestabilito nella sua costruzione
-- Si chiama programma “cablato”, ed era il solo sistema esistente pre-Von Neumann
 
 Un programma è una sequenza di istruzioni di cui ognuno è una operazione logica o aritmetica. Per ogni operazione, un diverso insieme di segnali di controllo.
 
@@ -95,8 +115,8 @@ Memoria centrale (RAM)
 - Operazioni richiedono accesso a più dati in memoria
 - Immagazzinare temporaneamente sia istruzioni che dati
 
-Buffer I/O : ricezione input, visualizzazione output etc
-### 3.2 Ciclo FETCH, DECODE, EXECUTE
+Buffer I/O : ricezione input, visualizzazione output etc.
+### 3.2 Ciclo Fetch, Decode, Execute (FDE)
 
 ![[Pasted image 20240127195616.png]]
 1. Istruction Fetch
@@ -118,13 +138,13 @@ Buffer I/O : ricezione input, visualizzazione output etc
 Interruzione: meccanismo con la quale altri moduli posso interrompere la normale sequenza di esecuzione.
 Può attivarsi per Errore programma, Timer, I/O, Guasto hardware.
 
-Interrupt Handler
+**Interrupt Handler**
 Nel ciclo FDE, la CPU fa il controllo delle interruzioni dopo l’EXECUTE e, quando avvengono, ritorna a FETCH altre istruzioni.
 
 È possibile disabilitare le interruzioni in esecuzioni importanti.
 
 <u>Interruzioni multiple</u>
-Opzione 1. Bloccare gli altri interrupt quando se ne gestisce uno.
+Opzione 1. Gli altri interrupt rimangono pendenti quando se ne gestisce uno.
 Tuttavia è possibile che gli interrupt abbiano priorità differenti.
 Opzione 2. Interruzioni annidate
 Gestire un primo interrupt finché il controllo di interrupt ne intercetta un altro di cui, se di priorità maggiore, iniziare a gestirlo. Questo avviene ricorsivamente.
@@ -322,7 +342,7 @@ I problemi di ’miss’
 - Miss di primo accesso
 - Miss di capacità insufficiente
 - Miss per conflitto, più blocchi mappati sullo stesso gruppo
-## 5. Memorie interne
+### 5. Memorie interne
 | Tipo   | Categoria   | Cancellabile       | Scrittura | Volatilità |
 | ------ | ----------- | ------------------ | --------- | ---------- |
 | RAM    | Read-Write  | Electricity, byte  |           | X          |
@@ -343,7 +363,7 @@ RAM Statiche (cache)
 Read Only Memory, Programmable Read Only Memory
 Erasable PROM, Electrically Erasable PROM
 
-**Codice rilevazione e correzione errori**
+**Codice rilevazione e correzione errori (Hamming)**
 Errori possono avvenire per hard failure o soft error
 1. Prendo il dato da salvare e lo passo per una funzione che da un codice di controllo unico
 2. Li salvo entrambi in memoria
@@ -403,7 +423,7 @@ RAID6: Hamming e un altro rilevatore a round-robin
 
 **Dischi SSD (Solid State Drive)**
 Un transistor con floating gate
-Floating gate:
+Floating gate
 - Non attivo, non interagisce con il control gate, bit a 1
 - Attivo, oltre una soglia di voltaggio, intrappola elettroni, bit a 0
 Gli elettroni nel floating gate, rimangono anche in assenza di corrente.
@@ -421,24 +441,35 @@ Con l’uso i file si frammentano.
 Soluzione: Lasciare un buffer libero nei blocchi, cancella dati temp, distribuzione delle scritture, RAID
 
 **Dischi ottici**
+- Lettura tramite laser
+- Data memorizzata come pit
+- Densità di memorizzazione costante
 - Velocità lineare costante
-- Ha una traccia sola senza gap
+- Dischi di policarbonato rivestiti di un materiare riflettente
 
-CD-ROM: sola lettura
+CD-ROM: sola lettura (650 Mb)
 CD_R: scritto una sola volta e poi sola lettura
 CD_RW: cancellabile, la scrittura avviene su tutta la traccia
 
-DVD (Digital Video/Versatile Disk): costruzione differente con 2 strati che diminuiscono il raggio del laser, usabile in 2 facce.
+| 00 \| FF...FF \| 00 | MIN \| SEC \| Sector \| Mode |    Data    | Layered ECC |
+|:-------------------:|:----------------------------:|:----------:|:-----------:|
+|      12 bytes       |           4 bytes            | 2048 bytes |  288 bytes  |
+|        SYNC         |              ID              |    Data    |    L-ECC    |
+
+DVD (Digital Video/Versatile Disk): costruzione differente con 2 strati 
+che diminuiscono il raggio del laser, usabile in 2 facce (17 Gb).
 
 **Nastro magnetico**
 Accesso seriale, utilizzato per backup
 ## 7. Input e Output
+
 - tendenzialmente sono lenti
 - c’è un’interfaccia (modulo I/O) che li gestisce
 - hanno un modulo di logica di controllo che comunica con il modulo I/O
 - hanno un buffer dati che salva comunicazioni con la CPU
 
 ![[IMG_7685.jpg]]
+
 Modulo I/O
 La CPU rilega le comunicazioni con i dispositivi al modulo I/O
 - ha un buffer delle istruzioni
@@ -448,47 +479,61 @@ La CPU rilega le comunicazioni con i dispositivi al modulo I/O
 
 La logica dell’accesso alla I/O è simile a quello della memoria.
 
-I/O memory-mapped
+**I/O memory-mapped**
 - dispositivi e memoria condividono lo stesso spazio e di indirizzamento
 - Problema: non si presta all’uso di cache e non è compatibile con bus multipli
-I/O isolated
+**I/O isolated**
 - indirizzamento separato
 - commandi speciali I/O
 
-Gestione I/O
+**Gestione I/O**
 CPU invia il commando al modulo
-- Programmed I/O
-	CPU aspetta che il modulo I/O completi
-- Interrupt driven I/O
+- *Programmed I/O*
+	CPU controlla un bit di stato che indica il completamento I/O
+- *Interrupt driven I/O*
 	modulo I/O manda un interrupt alla CPU quando completa
-- Direct memory access (DMA)
-	Il DMA salva i dati direttamente nella memoria
+- *Direct memory access (DMA)*
+	Il DMA salva i dati direttamente nella memoria centrale. Il controllore DMA manda un interrupt alla CPU quando termina
 
 DMA accede al bus della memoria:
-- una parola la volta, cycle stealing
-- per blocchi, burst mode
+- una parola la volta (cycle stealing)
+- per blocchi (burst mode)
 In entrambi i casi si blocca l’accesso alla CPU.
+
+Configurazione bus DMA:
+- bus singolo, controllore DMA isolato
+  bus usato 2 volte: da I/O a DMA, da DMA alla memoria
+- bus singolo, DMA integrato con uno o più I/O
+- I/O bus separato collegato dal DMA al system bus
 ## 8. Aritmetica dei calcolatori
 ALU = Arithmetic Logic Unit
-##### Numeri naturali con segno
-1. Uso il bit più a sinistra per il segno (0 positivo, 1 negativo)
-	Problemi: due rappresentazioni per lo 0, per operazioni tenere conto sia dei moduli che i segni
-2. **Complemento a due**
-	Positivi: da 0 a $2^{n-1}-1$
-	Negativi: bit più a sinistra a 1, i restanti vanno da -1 a $-2^{n-1}$
-	Per passare alla sua inversa complementare tutto e sommare 1
-	Somma e sottrazione stessa operazione (sottrazione è somma dell’inversa)
-	Si devono gestire gli overflow
+#### 8.1 Numeri naturali con segno
+Uso il bit più a sinistra per il segno (0 positivo, 1 negativo)
+Problemi: due rappresentazioni per lo 0, per operazioni tenere conto sia dei moduli che i segni
+
+**\[ Complemento a due \]**
+Positivi: da 0 a $2^{n-1}-1$
+Negativi: bit più a sinistra a 1, i restanti vanno da -1 a $-2^{n-1}$
+Per passare alla sua inversa complementare tutto e sommare 1
+
+Somma e sottrazione normali e sono la stessa operazione (sottrazione è somma dell’inversa). Si devono gestire gli overflow.
 
 Moltiplicazione
-Moltiplicatore presa cifra più a destra e 
-##### Numero reali
+Calcolare il prodotto parziale di ogni cifra e sommarli.  
+Ciò non funziona se il moltiplicatore è negativo. 
+Possibile soluzione: convertire i fattori negativi in positivi, fare la moltiplicazione e poi convertirli al segno dovuto.
+Soluzione usata: algoritmo di Booth.
+
+Divisione
+Utilizza traslazioni, somme e sottrazioni ripetute.
+#### 8.2 Numero reali
 Virgola mobile (floating point), specificare dove si trova la virgola
-**Floating point**
+**\[ Floating point \]**
 Notazione scientifica
 $\pm\text{mantissa}\cdot\text{base}^{\pm\text{esponente}}$
 es: $0,000000457=4,57\cdot10^{-7}$
-in binario $$\pm1,\text{mantissa}\cdot2^{\pm\text{esponente polarizzato}}$$esponente polarizzato = esponente $+(2^{k-1}-1)$
+
+in binario $$\pm1,\text{mantissa}\cdot2^{\text{ esponente polarizzato}}$$esponente polarizzato = esponente $-(2^{k-1}-1)$
 
 |                    | sign | biased exponent | significand |
 | ------------------ | ---- | --------------- | ----------- |
@@ -497,22 +542,25 @@ in binario $$\pm1,\text{mantissa}\cdot2^{\pm\text{esponente polarizzato}}$$espon
 bias $=2^{8-1}-1=127$
 -7+127=120=01111000
 
-Meno bit vengono usati per l’esponente, meno è la precisione man mano che ci si allontana dallo 0
+Meno bit vengono usati per l’esponente, meno è la precisione man mano che ci si allontana dallo 0.
 
-Standard IEEE 754
-Binary32
+*Standard IEEE 754*
+- singolo: formato 32bit, 8bit esponente
+- double: formato 64bit, 11bit esponente
+
+Binary32 (singolo)
 - esponente 0, mantissa 0; 0
 - esponente 1, mantissa 0; overflow
 - esponente 0, mantissa $\neq0$; numero denormalizzato
-- esponente 0, mantissa $\neq0$; Not A Number
+- esponente 1, mantissa $\neq0$; Not A Number
 
-Somma e sottrazione
+*Somma e sottrazione*
 1. Controllo dello zero
 2. Allineamento delle mantisse (mettiamo esponenti uguali)
 3. Somma e sottrazione delle mantisse
-4. Normalizzazione del risultato
+4. Normalizzazione del risultato (traslare a sinistra finché cifra è 1)
 
-Moltiplicazione e divisione
+*Moltiplicazione e divisione*
 1. Controllo dello zero
 2. Moltiplicazione > Somma degli esponenti meno bias
 	Divisione > Sottrazione degli esponenti più bias
@@ -520,25 +568,25 @@ Moltiplicazione e divisione
 2. Normalizzazione
 3. Arrotondamento
 
-### Linguaggio macchina
+## 9. Linguaggio macchina
 Istruzioni che CPU riesce a eseguire
 Ne conseguono l’organizzazione della CPU e del sistema
 
 CISC: CPU complessa che snella le istruzioni
 RISC: CPU semplice che fa più parallelizzazioni
 
-| Codice operativo | Riferimento operando | Rif operatore | Rif Istruzione successiva |
-| ---------------- | -------------------- | ------------- | ------------------------- |
-| ADD              | A                    | B             | -                         | 
+| Codice operativo | Riferimento operando | Rif operatore | Rif Istruzione successiva |     |
+| ---------------- | -------------------- | ------------- | ------------------------- | --- |
+| ADD              | A                    | B             | -                         |     |
 
-Istruzioni = sequenza di bit
+Istruzioni = sequenza di bit divisa in campi
 Rappresentati da simboli (ADD, SUB, LOAD, …, A, B)
 - Elaborazione dati: aritmetiche e logiche nei registri CPU
 - Trasferimento dati
 - Controllo del flusso: ciclo, condizione
 
 Possibile usare
-1 indirizzo > accumulatore 
+1 indirizzo > accumulatore
 0 indirizzi > pila
 
 Meno indirizzi > istruzioni più elementari, CPU più semplice > Più istruzioni
@@ -550,10 +598,9 @@ es: 246 = 0010 0100 0110
 
 Codice ASCII (8bit)
 7bit carattere e 1bit di parità
-ora UTF
+ora UTF8
 
-Dati logici: n bit invece di singolo dato
-
+Dati logici: n bit invece di singolo dato, per manipolare bit separatamente
 ##### Dati x86
 Indirizzamento per unità di 8bit
 Non necessario allineamento di indirizzi
@@ -578,7 +625,7 @@ Salvo l’indirizzo di RETURN in
 Entrambe queste opzioni non permettono la ricorsione
 - cima di una pila
 
-Modi di indirizzamento
+*Modi di indirizzamento*
 - **Immediato**, l’operando è parte dell’istruzione
 	\[Cod Op\]\[Operando\]
 	Pro: nessun accesso alla memoria
@@ -703,7 +750,7 @@ $$T_k=[k+(n-1)]\tau$$$T_k$ è tempo totale richiesto da una pipeline con $k$ sta
 
 **Speedup** (fattore di velocizzazione)$$S_k=\frac{T_l}{T_k}=\frac{nkt}{[k+(n-1)]t}=\frac{nk}{[k+(n-1)]}$$dove $T_l$ è il tempo totale con $n$ istruzioni senza pipeline
 
-Pipeline hazards
+*Pipeline hazards*
 - **Sbilanciamento delle fasi**, 
 	Le <u>fasi hanno durate diverse</u> e si deve attendere la fine delle fasi precedenti per accedere o passare i registri.
 	Soluzioni: decomporre le fasi più lunghe, duplicare gli esecutori delle fasi pesanti e farli operare in parallelo.
@@ -718,7 +765,7 @@ Pipeline hazards
 	- Introdurre fasi non operative finché i dati sono disponibili
 	- Usare circuiti di data forwarding per propagare in avanti l’ output
 	- Riordino delle istruzioni dal compilatore e/o CPU
-- **Control hazards**
+- **Control hazards (Delayed Branch)**
 	Ci sono istruzioni che <u>alterano la sequenzialità</u> (salti, chiamate, ritorni, interruzioni).
 	Soluzioni:
 	 - Fasi non operative, semplice ma inefficiente
@@ -727,8 +774,9 @@ Pipeline hazards
 	- Flussi multipli (multiple streams)
 		Replica la prima parte della pipeline per entrambi i rami possibili 
 	- Prefetch dell’istruzione target
-		Anticipa l’istruzione oltre a quella di salto, scarto se non preso
+		Anticipa l’istruzione target del salto, scarto se non preso
 	- Buffer circolare (loop buffer)
+		una piccola memoria che mantiene le ultime n istruzioni prelevate, utile nel caso di loop
 	- Predizione salti
 		2bit di predizione, predice il salto fino a 2 errori dopo di che predice che non avviene
 		$\begin{align}&\text{predict taken }[11]\xtofrom[\text{not taken}]{\enspace\text{taken}}&\text{predict taken }[10]\\&\uparrow{\text{taken}}&\downarrow\text{not taken}\\&\text{predict not taken }[01]\xtofrom[\text{taken}]{\text{not taken}}&\text{predict not taken }[00]\end{align}$		
@@ -751,7 +799,7 @@ Possibile salvare i dati nei in una finestra (gruppo) di registri.
 | ------------------------------------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------- |
 | parametri passati all’invocazione della procedura corrente e il valore da restituire al chiamante | variabili locali | per scambio di parametri e valore di ritorno con procedura nested |
 
-![[IMG_7709.jpeg]]
+![[IMG_7709.jpg]]
 e così via, per tutti i livelli di annidamento.
 
 I registri sono limitati
@@ -796,7 +844,8 @@ Banchi di registri tra una fase all’altra per la pipeline
 2. ID/EX
 	- `.IR <- IF/ID.IR`
 	- `.NPC <- IF/ID.IR`
-	- `.A <- Reg[IF/ID.IR[rs]], .B <- Reg[IF/ID.IR[rt]]`
+	- `.TopAluOutput <- Reg[IF/ID.IR[rs]]`,
+	  `.BottonAluOutput <- Reg[IF/ID.IR[rt]]`
 	- `.Imm <- sign-extend (IF/ID.IR[Immediate field])`
 3. EX/MEM
 	- `.IR <- ID/EX.IR`
