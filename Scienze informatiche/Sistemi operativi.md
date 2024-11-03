@@ -1,6 +1,4 @@
 A. S. Tanenbaum, H. Bos, I Moderni Sistemi Operativi
-Compitini: 15-19 Aprile
-Gioia
 
 All’inizio il sistema operativo era l’operatore.
 PDP-8 usabile con più terminali, quindi utenti in semi-parallelo.

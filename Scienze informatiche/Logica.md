@@ -1,5 +1,3 @@
-Lezione di recupero: 24-31 settembre 10.30-12.30 
-21 novembre parziale 27NMv3XnZnhX
 In questo corso impariamo la logica di Aristotele
 
 _Vedi diapositiva 5/09_
@@ -174,6 +172,6 @@ Aritmetica di Peano
 - $Ax4.\vdash\forall x\forall y\ x+s(y)=s(x+y)$
 	”definizione di somma”
 - $Ax5.\vdash x\ x\cdot0=0$
-	“zero è annullatole del prodotto”
+	“zero è annullatore del prodotto”
 - $Ax6.\vdash\forall x\forall y\ x\cdot s(y)=x\cdot y+x$
 - $Ax7.\vdash fr[x/0]\&\forall x(fr\)$
